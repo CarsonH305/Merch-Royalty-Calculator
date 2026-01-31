@@ -1,0 +1,32 @@
+{
+  "name": "royalty-calculator-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/royalty-calculator-api/src",
+  "projectType": "application",
+  "tags": ["scope:api", "type:app"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/royalty-calculator-api",
+        "main": "apps/royalty-calculator-api/src/main.ts",
+        "tsConfig": "apps/royalty-calculator-api/tsconfig.app.json"
+      },
+      "configurations": {
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "royalty-calculator-api:build"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "royalty-calculator-api:build:production"
+        }
+      }
+    }
+  }
+}

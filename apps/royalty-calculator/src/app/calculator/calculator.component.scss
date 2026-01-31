@@ -1,0 +1,340 @@
+:host {
+  display: block;
+}
+
+.calc-container {
+  min-height: 100vh;
+  background: var(--merch-bg-subtle);
+}
+
+.calc-header {
+  border-bottom: 1px solid var(--merch-border);
+  background: var(--merch-surface);
+  box-shadow: var(--merch-shadow-sm);
+}
+
+
+.calc-card {
+  background: var(--merch-surface);
+  border: 1px solid var(--merch-border);
+  border-radius: var(--merch-radius-lg);
+  box-shadow: var(--merch-shadow-sm);
+}
+
+.calc-panel {
+  .mat-mdc-expansion-panel-header-title {
+    font-weight: 600;
+    color: var(--merch-primary);
+  }
+}
+
+.section-req {
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: var(--merch-text-muted);
+}
+
+.actions-field {
+  width: 16rem;
+  min-width: 16rem;
+}
+
+// Field styling: bold label above input, no splitting
+.field-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  .field-label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--merch-text);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .field-optional {
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: var(--merch-text-muted);
+  }
+
+  .field-input {
+    width: 100%;
+
+    ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+
+    ::ng-deep .mat-mdc-form-field-infix {
+      padding: 12px 6px;
+      min-height: 48px;
+    }
+
+    ::ng-deep .mat-mdc-input-element,
+    ::ng-deep input {
+      padding: 4px 0;
+    }
+
+    ::ng-deep [matPrefix],
+    ::ng-deep [matTextPrefix] {
+      margin-right: 1px;
+    }
+
+    ::ng-deep [matSuffix],
+    ::ng-deep [matTextSuffix] {
+      margin-left: 1px;
+    }
+
+    ::ng-deep .mdc-notched-outline .mdc-notched-outline__leading,
+    ::ng-deep .mdc-notched-outline .mdc-notched-outline__notch,
+    ::ng-deep .mdc-notched-outline .mdc-notched-outline__trailing {
+      border-color: var(--merch-border);
+    }
+
+    ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline .mdc-notched-outline__leading,
+    ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline .mdc-notched-outline__notch,
+    ::ng-deep .mat-mdc-form-field:hover .mdc-notched-outline .mdc-notched-outline__trailing {
+      border-color: var(--merch-accent);
+    }
+
+    .prefix {
+      color: var(--merch-text-muted);
+      margin-right: 1px;
+    }
+  }
+}
+
+.info-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--merch-accent);
+  cursor: help;
+  opacity: 0.8;
+}
+
+.info-icon-inline {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  color: var(--merch-text-muted);
+  cursor: help;
+  opacity: 0.7;
+  vertical-align: middle;
+}
+
+// Result blocks with design token colors
+::ng-deep .title-with-icon {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.result-block {
+  border-radius: var(--merch-radius-md);
+  padding: 1rem 1.25rem;
+
+  .result-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .result-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}
+
+.result-gross {
+  background: #f8fafc;
+  border: 1px solid var(--merch-border);
+
+  .result-label { color: var(--merch-text-secondary); }
+  .result-value { color: var(--merch-primary); }
+}
+
+.result-net {
+  background: #f0f9ff;
+  border: 1px solid var(--merch-accent-muted);
+
+  .result-label { color: #1e40af; }
+  .result-value { color: var(--merch-primary); }
+}
+
+.result-royalty {
+  background: #eff6ff;
+  border: 1px solid var(--merch-accent-muted);
+
+  .result-label { color: #1d4ed8; }
+  .result-value { color: #1e3a8a; }
+}
+
+.result-merch {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+
+  .result-label { color: #047857; }
+  .result-value { color: #064e3b; }
+}
+
+.result-margin {
+  border-radius: var(--merch-radius-md);
+  border: 1px solid var(--merch-border);
+  padding: 0.75rem 1rem;
+
+  .result-label {
+    font-size: 0.8125rem;
+    color: var(--merch-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .result-value-sm { font-size: 1.125rem; font-weight: 600; color: var(--merch-primary); }
+}
+
+.result-breakdown {
+  border-top: 1px solid var(--merch-border);
+  padding-top: 1rem;
+
+  .result-label {
+    font-weight: 600;
+    color: var(--merch-text-secondary);
+  }
+}
+
+// Summary card
+.calc-summary-card {
+  border-left: 4px solid var(--merch-accent);
+}
+
+.summary-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.abnormal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.abnormal-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--merch-radius-sm);
+  font-size: 0.875rem;
+
+  .abnormal-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+}
+
+.abnormal-warning {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+
+  .abnormal-icon { color: var(--merch-warning); }
+}
+
+.abnormal-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+
+  .abnormal-icon { color: var(--merch-error); }
+}
+
+.summary-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem 0;
+
+    span:first-child { color: var(--merch-text-secondary); }
+    span:last-child { font-weight: 500; }
+  }
+}
+
+.recommendations-btn {
+  align-self: flex-start;
+}
+
+.recommendations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--merch-border);
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--merch-text-secondary);
+
+  .rec-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--merch-accent);
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+}
+
+// Actions - Save button lighter blue
+.save-scenario-btn {
+  background-color: var(--merch-accent-muted) !important;
+  color: var(--merch-primary) !important;
+  border: 1px solid var(--merch-accent) !important;
+
+  &:hover {
+    background-color: #bfdbfe !important;
+  }
+}
+
+// Material card overrides for color
+::ng-deep .calc-card .mat-mdc-card-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--merch-border);
+}
+
+::ng-deep .calc-card .mat-mdc-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--merch-primary);
+}
+
+::ng-deep .calc-card .mat-mdc-card-subtitle {
+  color: var(--merch-text-secondary);
+  font-size: 0.8125rem;
+}
+
+::ng-deep .calc-card .mat-mdc-card-content {
+  padding: 1.25rem;
+}

@@ -1,0 +1,28 @@
+{
+  "name": "royalty-calculator-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/royalty-calculator-e2e/src",
+  "tags": ["scope:e2e", "type:e2e"],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/royalty-calculator-e2e/cypress.config.ts",
+        "devServerTarget": "royalty-calculator:serve",
+        "testingType": "e2e"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "royalty-calculator:serve:production"
+        },
+        "ci": {
+          "devServerTarget": "royalty-calculator:serve:development",
+          "browser": "chrome",
+          "headed": true
+        }
+      }
+    }
+  },
+  "implicitDependencies": ["royalty-calculator"]
+}

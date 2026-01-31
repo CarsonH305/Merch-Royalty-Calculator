@@ -1,0 +1,388 @@
+<div class="min-h-screen calc-container">
+  <header class="calc-header">
+    <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+      <h1 class="text-xl font-semibold text-merch-primary">Merch Royalty Calculator</h1>
+      <p class="mt-1 text-sm text-slate-500">Calculate artist royalties, margins, and profitability</p>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <!-- Royalties Toggle -->
+    <div class="mb-6 flex items-center gap-3 royalties-toggle">
+      <mat-slide-toggle
+        [ngModel]="showRoyalties()"
+        (ngModelChange)="showRoyalties.set($event)"
+        color="primary"
+        aria-label="Include royalties">
+        Royalties
+      </mat-slide-toggle>
+      <span class="text-sm text-slate-500">Include royalty section for artist/label calculations</span>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-2">
+      <!-- Input Panel -->
+      <mat-card class="calc-card overflow-hidden">
+        <mat-card-header>
+          <mat-card-title>Inputs</mat-card-title>
+          <mat-card-subtitle>Revenue, costs, and deductions</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-accordion multi>
+            <mat-expansion-panel [expanded]="true" class="calc-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title class="flex items-center gap-2">
+                  <span>Revenue & Costs</span>
+                  <span class="section-req">({{ getSectionRequirement('revenue-costs') }})</span>
+                  <mat-icon matTooltip="{{ getSectionTooltip('revenue-costs') }}" matTooltipPosition="above" class="info-icon">info</mat-icon>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="field-grid">
+                <div class="field-block">
+                  <label class="field-label">
+                    Cost per unit (COGS)
+                    <span class="field-optional">(optional)</span>
+                    <mat-icon matTooltip="{{ getFieldTooltip('cost') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                  </label>
+                  <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(cost(), 2, focusedField() !== 'cost')" (ngModelChange)="cost.set(parseInputValue($event)); pricingFieldLastEdited.set('cost')" (focus)="focusedField.set('cost')" (blur)="focusedField.set(null); formatInputOnBlur('cost')" placeholder="0.00" />
+                    <span matTextPrefix class="prefix">$</span>
+                  </mat-form-field>
+                </div>
+                <div class="field-block">
+                  <label class="field-label">
+                    Markup %
+                    <span class="field-optional">(optional)</span>
+                    <mat-icon matTooltip="{{ getFieldTooltip('markupPercent') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                  </label>
+                  <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(markupPercent(), 2, focusedField() !== 'markupPercent')" (ngModelChange)="markupPercent.set(parseInputValue($event)); pricingFieldLastEdited.set('markup')" (focus)="focusedField.set('markupPercent')" (blur)="focusedField.set(null); formatInputOnBlur('markupPercent')" placeholder="0.00" />
+                    <span matTextSuffix>%</span>
+                  </mat-form-field>
+                </div>
+                <div class="field-block">
+                  <label class="field-label">
+                    Sale Price per unit
+                    <span class="field-optional">(optional)</span>
+                    <mat-icon matTooltip="{{ getFieldTooltip('salePricePerUnit') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                  </label>
+                  <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(salePricePerUnit(), 2, focusedField() !== 'salePricePerUnit')" (ngModelChange)="salePricePerUnit.set(parseInputValue($event)); pricingFieldLastEdited.set('salePrice')" (focus)="focusedField.set('salePricePerUnit')" (blur)="focusedField.set(null); formatInputOnBlur('salePricePerUnit')" placeholder="0.00" />
+                    <span matTextPrefix class="prefix">$</span>
+                  </mat-form-field>
+                </div>
+                <div class="field-block">
+                  <label class="field-label">
+                    Units
+                    <span class="field-optional">(optional)</span>
+                    <mat-icon matTooltip="{{ getFieldTooltip('units') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                  </label>
+                  <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                    <input matInput type="text" inputmode="numeric" [ngModel]="formatInputDisplay(units(), 0, focusedField() !== 'units')" (ngModelChange)="setUnitsFromInput($event)" (focus)="focusedField.set('units')" (blur)="focusedField.set(null); formatInputOnBlur('units')" placeholder="100" />
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="true" class="calc-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title class="flex items-center gap-2">
+                  <span>Deductions</span>
+                  <span class="section-req">({{ getSectionRequirement('deductions') }})</span>
+                  <mat-icon matTooltip="{{ getSectionTooltip('deductions') }}" matTooltipPosition="above" class="info-icon">info</mat-icon>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="field-grid">
+                <div class="field-block">
+                  <label class="field-label">
+                    Returns %
+                    <span class="field-optional">(optional)</span>
+                    <mat-icon matTooltip="{{ getFieldTooltip('returnsPercent') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                  </label>
+                  <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(returnsPercent(), 2, focusedField() !== 'returnsPercent')" (ngModelChange)="returnsPercent.set(parseInputValue($event))" (focus)="focusedField.set('returnsPercent')" (blur)="focusedField.set(null); formatInputOnBlur('returnsPercent')" placeholder="0.00" />
+                    <span matTextSuffix>%</span>
+                  </mat-form-field>
+                </div>
+                <div class="field-block">
+                  <label class="field-label">
+                    Shipping cost
+                    <span class="field-optional">(optional)</span>
+                    <mat-icon matTooltip="{{ getFieldTooltip('shippingCost') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                  </label>
+                  <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(shippingCost(), 2, focusedField() !== 'shippingCost')" (ngModelChange)="shippingCost.set(parseInputValue($event))" (focus)="focusedField.set('shippingCost')" (blur)="focusedField.set(null); formatInputOnBlur('shippingCost')" placeholder="0.00" />
+                    <span matTextPrefix class="prefix">$</span>
+                  </mat-form-field>
+                </div>
+                <div class="field-block">
+                  <label class="field-label">
+                    Taxes
+                    <span class="field-optional">(optional)</span>
+                    <mat-icon matTooltip="{{ getFieldTooltip('taxesAmount') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                  </label>
+                  <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(taxesAmount(), 2, focusedField() !== 'taxesAmount')" (ngModelChange)="taxesAmount.set(parseInputValue($event))" (focus)="focusedField.set('taxesAmount')" (blur)="focusedField.set(null); formatInputOnBlur('taxesAmount')" placeholder="0.00" />
+                    <span matTextPrefix class="prefix">$</span>
+                  </mat-form-field>
+                </div>
+                <div class="field-block">
+                  <label class="field-label">
+                    Discounts
+                    <span class="field-optional">(optional)</span>
+                    <mat-icon matTooltip="{{ getFieldTooltip('discountsAmount') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                  </label>
+                  <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(discountsAmount(), 2, focusedField() !== 'discountsAmount')" (ngModelChange)="discountsAmount.set(parseInputValue($event))" (focus)="focusedField.set('discountsAmount')" (blur)="focusedField.set(null); formatInputOnBlur('discountsAmount')" placeholder="0.00" />
+                    <span matTextPrefix class="prefix">$</span>
+                  </mat-form-field>
+                </div>
+                <div class="field-block">
+                  <label class="field-label">
+                    Other costs
+                    <span class="field-optional">(optional)</span>
+                    <mat-icon matTooltip="{{ getFieldTooltip('otherCosts') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                  </label>
+                  <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(otherCosts(), 2, focusedField() !== 'otherCosts')" (ngModelChange)="otherCosts.set(parseInputValue($event))" (focus)="focusedField.set('otherCosts')" (blur)="focusedField.set(null); formatInputOnBlur('otherCosts')" placeholder="0.00" />
+                    <span matTextPrefix class="prefix">$</span>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-expansion-panel>
+
+            @if (showRoyalties()) {
+              <mat-expansion-panel [expanded]="true" class="calc-panel">
+                <mat-expansion-panel-header>
+                  <mat-panel-title class="flex items-center gap-2">
+                    <span>Royalty</span>
+                    <span class="section-req">({{ getSectionRequirement('royalty') }})</span>
+                    <mat-icon matTooltip="{{ getSectionTooltip('royalty') }}" matTooltipPosition="above" class="info-icon">info</mat-icon>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="field-grid">
+                  <div class="field-block">
+                    <label class="field-label">
+                      Royalty type
+                      <span class="field-optional">(optional)</span>
+                      <mat-icon matTooltip="{{ getFieldTooltip('royaltyType') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                    </label>
+                    <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                      <mat-select [ngModel]="royaltyType()" (ngModelChange)="royaltyType.set($event)">
+                        <mat-option value="percentage">Percentage</mat-option>
+                        <mat-option value="per-unit">Per unit</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  @if (royaltyType() === 'percentage') {
+                    <div class="field-block">
+                      <label class="field-label">
+                        Royalty %
+                        <span class="field-optional">(optional)</span>
+                        <mat-icon matTooltip="{{ getFieldTooltip('royaltyPercent') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                      </label>
+                      <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                        <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(royaltyPercent(), 2, focusedField() !== 'royaltyPercent')" (ngModelChange)="royaltyPercent.set(parseInputValue($event))" (focus)="focusedField.set('royaltyPercent')" (blur)="focusedField.set(null); formatInputOnBlur('royaltyPercent')" placeholder="0.00" />
+                        <span matTextSuffix>%</span>
+                      </mat-form-field>
+                    </div>
+                    <div class="field-block">
+                      <label class="field-label">
+                        Royalty base
+                        <span class="field-optional">(optional)</span>
+                        <mat-icon matTooltip="{{ getFieldTooltip('royaltyBase') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                      </label>
+                      <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                        <mat-select [ngModel]="royaltyBase()" (ngModelChange)="royaltyBase.set($event)">
+                          <mat-option value="gross">Gross revenue</mat-option>
+                          <mat-option value="net">Net revenue</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  }
+                  @if (royaltyType() === 'per-unit') {
+                    <div class="field-block">
+                      <label class="field-label">
+                        Royalty $ per unit
+                        <span class="field-optional">(optional)</span>
+                        <mat-icon matTooltip="{{ getFieldTooltip('royaltyPerUnit') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                      </label>
+                      <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+                        <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(royaltyPerUnit(), 2, focusedField() !== 'royaltyPerUnit')" (ngModelChange)="royaltyPerUnit.set(parseInputValue($event))" (focus)="focusedField.set('royaltyPerUnit')" (blur)="focusedField.set(null); formatInputOnBlur('royaltyPerUnit')" placeholder="0.00" />
+                        <span matTextPrefix class="prefix">$</span>
+                      </mat-form-field>
+                    </div>
+                  }
+                </div>
+              </mat-expansion-panel>
+            }
+          </mat-accordion>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Results Panel -->
+      <div class="flex flex-col gap-6">
+        <mat-card class="calc-card overflow-hidden">
+          <mat-card-header>
+            <mat-card-title class="flex items-center gap-2 title-with-icon">
+              <span>Results</span>
+              <mat-icon matTooltip="{{ getSectionTooltip('results') }}" matTooltipPosition="above" class="info-icon">info</mat-icon>
+            </mat-card-title>
+            <mat-card-subtitle>Live breakdown</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            @if (result(); as r) {
+              <div class="space-y-4">
+                <div class="result-block result-gross">
+                  <div class="result-label">
+                    Gross Revenue
+                    <mat-icon matTooltip="{{ getResultTooltip('grossRevenue') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                  </div>
+                  <div class="result-value">{{ formatCurrency(r.revenue) }}</div>
+                </div>
+                <div class="result-block result-net">
+                  <div class="result-label">
+                    Net Revenue
+                    <mat-icon matTooltip="{{ getResultTooltip('netRevenue') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                  </div>
+                  <div class="result-value">{{ formatCurrency(r.netRevenue) }}</div>
+                </div>
+                @if (showRoyalties()) {
+                  <div class="result-block result-royalty">
+                    <div class="result-label">
+                      Artist Royalty
+                      <mat-icon matTooltip="{{ getResultTooltip('artistRoyalty') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                    </div>
+                    <div class="result-value">{{ formatCurrency(r.royaltyAmount) }}</div>
+                  </div>
+                }
+                <div class="result-block result-merch">
+                  <div class="result-label">
+                    Company Profit
+                    <mat-icon matTooltip="{{ getResultTooltip('companyProfit') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                  </div>
+                  <div class="result-value">{{ formatCurrency(r.merchCompanyNet) }}</div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="result-margin">
+                    <div class="result-label">
+                      Gross Margin
+                      <mat-icon matTooltip="{{ getResultTooltip('grossMargin') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                    </div>
+                    <div class="result-value-sm">{{ formatPercent(r.grossMarginPercent) }}</div>
+                  </div>
+                  <div class="result-margin">
+                    <div class="result-label">
+                      Net Margin
+                      <mat-icon matTooltip="{{ getResultTooltip('netMargin') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
+                    </div>
+                    <div class="result-value-sm">{{ formatPercent(r.netMarginPercent) }}</div>
+                  </div>
+                </div>
+                <div class="result-breakdown">
+                  <div class="result-label">Breakdown</div>
+                  <dl class="mt-2 space-y-1 text-sm">
+                    <div class="flex justify-between">
+                      <dt class="text-slate-500">COGS</dt>
+                      <dd>{{ formatCurrency(r.cost * r.units) }}</dd>
+                    </div>
+                    <div class="flex justify-between">
+                      <dt class="text-slate-500">Deductions</dt>
+                      <dd>{{ formatCurrency(r.totalDeductions) }}</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Input Summary & Recommendations -->
+        <mat-card class="calc-card calc-summary-card overflow-hidden">
+          <mat-card-header>
+            <mat-card-title class="flex items-center gap-2 title-with-icon">
+              <span>Input Summary</span>
+              <mat-icon matTooltip="{{ getSectionTooltip('summary') }}" matTooltipPosition="above" class="info-icon">info</mat-icon>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="summary-content">
+              @if (abnormalFlags().length > 0) {
+                <div class="abnormal-list">
+                  @for (flag of abnormalFlags(); track flag.id) {
+                    <div class="abnormal-item" [class]="'abnormal-' + flag.severity">
+                      <mat-icon class="abnormal-icon">{{ flag.severity === 'warning' ? 'warning' : 'error' }}</mat-icon>
+                      <span>{{ flag.message }}</span>
+                    </div>
+                  }
+                </div>
+              } @else if (hasAnyInputs()) {
+                <p class="text-sm text-slate-600">All inputs look within typical ranges.</p>
+              }
+              <div class="summary-stats">
+                @if (result(); as r) {
+                  <div class="summary-row">
+                    <span>Revenue</span>
+                    <span>{{ formatCurrency(r.revenue) }}</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>COGS</span>
+                    <span>{{ formatCurrency(r.cost * r.units) }}</span>
+                  </div>
+                  @if (returnsPercent() !== null && returnsPercent() !== undefined) {
+                    <div class="summary-row">
+                      <span>Returns</span>
+                      <span>{{ formatNumber(returnsPercent()) }}%</span>
+                    </div>
+                  }
+                }
+              </div>
+              <button mat-stroked-button color="primary" class="recommendations-btn" (click)="showRecommendations.set(!showRecommendations())">
+                {{ showRecommendations() ? 'Hide' : 'Get' }} Recommendations
+              </button>
+              @if (showRecommendations()) {
+                <div class="recommendations-list">
+                  @for (rec of getRecommendations(); track rec) {
+                    <div class="recommendation-item">
+                      <mat-icon class="rec-icon">lightbulb</mat-icon>
+                      <span>{{ rec }}</span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Saved Scenarios -->
+    @if (scenarios().length > 0) {
+      <mat-expansion-panel class="mt-6 calc-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Saved Scenarios</mat-panel-title>
+          <mat-panel-description>{{ scenarios().length }} saved</mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="flex flex-wrap gap-2">
+          @for (s of scenarios(); track s._id) {
+            <button mat-stroked-button (click)="loadScenario(s)" class="!normal-case">{{ s.name }}</button>
+          }
+        </div>
+      </mat-expansion-panel>
+    }
+
+    <!-- Actions -->
+    <div class="mt-6 flex flex-wrap items-end gap-4">
+      <div class="field-block actions-field">
+        <label class="field-label">
+          Scenario name
+          <span class="field-optional">(optional)</span>
+        </label>
+        <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
+          <input matInput [ngModel]="scenarioName()" (ngModelChange)="scenarioName.set($event)" placeholder="My scenario" />
+        </mat-form-field>
+      </div>
+      <button mat-stroked-button class="save-scenario-btn" (click)="saveScenario()">Save scenario</button>
+      <button mat-stroked-button (click)="exportCsv()">Export CSV</button>
+    </div>
+  </main>
+</div>

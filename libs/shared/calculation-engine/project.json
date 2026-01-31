@@ -1,0 +1,28 @@
+{
+  "name": "calculation-engine",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/calculation-engine/src",
+  "projectType": "library",
+  "tags": ["scope:shared", "type:util"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/shared/calculation-engine",
+        "main": "libs/shared/calculation-engine/src/index.ts",
+        "tsConfig": "libs/shared/calculation-engine/tsconfig.json"
+      },
+      "configurations": {
+        "production": {}
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/shared/calculation-engine/jest.config.ts"
+      }
+    }
+  }
+}

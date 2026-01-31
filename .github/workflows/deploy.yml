@@ -1,0 +1,52 @@
+name: Deploy Merch Royalty Calculator
+
+on:
+  push:
+    branches: [main, master]
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci --legacy-peer-deps
+
+      - run: npx nx run royalty-calculator:build --configuration=production
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync dist/apps/royalty-calculator/browser s3://${{ secrets.S3_BUCKET }}/royalty-calculator --delete
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/royalty-calculator/*"
+
+  build-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci --legacy-peer-deps
+
+      - run: npx nx run royalty-calculator-api:build
+
+      - name: Deploy API
+        run: |
+          # Add Serverless Framework deployment or App Runner build steps
+          # Example: npx serverless deploy --stage prod
+          echo "API build complete. Configure App Runner or Lambda deployment."

@@ -1,8 +1,55 @@
-# MerchRoyaltyCalculator
+# Merch Royalty Calculator
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A standalone add-on application for merchandise brands and companies to run financial calculations on their programs—artist royalties, margins, COGS, shipping, and profitability. Built to integrate with the Merch tech stack (Angular, NestJS, MongoDB, AWS).
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## Features
+
+- **Artist/Label mode**: Calculate artist royalty (gross or net), merch company net, margins
+- **Merch-Only mode**: COGS, markup, shipping, returns, taxes—no artist involvement
+- **Smart auto-calculation**: Enter any 2 of (cost, markup, revenue) to derive the third
+- **Save & load scenarios**: Persist calculations to MongoDB
+- **Export CSV**: Download results for reporting
+
+## Quick Start
+
+```bash
+npm install --legacy-peer-deps
+```
+
+### Run the frontend
+
+```bash
+npx nx serve royalty-calculator
+```
+
+Open http://localhost:4200
+
+### Run the API (requires MongoDB)
+
+```bash
+# Set MONGODB_URI or use default localhost
+npx nx serve royalty-calculator-api
+```
+
+API runs on http://localhost:3333. Swagger docs at http://localhost:3333/api/docs
+
+## Projects
+
+| Project | Description |
+|---------|-------------|
+| `royalty-calculator` | Angular 17 frontend |
+| `royalty-calculator-api` | NestJS 11 API |
+| `calculation-engine` | Pure TS calculation logic (shared) |
+| `royalty-calculator-e2e` | Cypress E2E tests |
+
+## Tech Stack
+
+- **Frontend**: Angular 17, TypeScript, Tailwind, Angular Material 17
+- **Backend**: NestJS 11, Fastify, Mongoose, Swagger
+- **Database**: MongoDB (scenarios)
+- **Build**: Nx, esbuild
+
+See [DEPLOY.md](DEPLOY.md) for deployment instructions.
 
 [Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
 

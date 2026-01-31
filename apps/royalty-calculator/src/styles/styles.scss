@@ -1,0 +1,18 @@
+@use 'design-tokens';
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: var(--merch-font-sans);
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+    background-color: var(--merch-bg-subtle);
+    color: var(--merch-text);
+  }
+}

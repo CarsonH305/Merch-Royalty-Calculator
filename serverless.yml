@@ -1,0 +1,14 @@
+# Merch Royalty Calculator API - Serverless deployment template
+# For Lambda deployment, wrap NestJS with @vendia/serverless-express
+# Alternative: Deploy to AWS App Runner using Docker
+# See README.md for deployment instructions
+service: merch-royalty-calculator-api
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ${opt:region, 'us-east-1'}
+  environment:
+    MONGODB_URI: ${env:MONGODB_URI, 'mongodb://localhost:27017/royalty-calculator'}

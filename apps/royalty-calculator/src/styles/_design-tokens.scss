@@ -1,0 +1,53 @@
+// Merch Design System - design.merch.co inspired tokens
+// Fallback palette for when design tokens are not exported
+
+:root {
+  // Primary
+  --merch-primary: #0f172a;
+  --merch-primary-light: #1e293b;
+  --merch-primary-dark: #020617;
+
+  // Accent
+  --merch-accent: #3b82f6;
+  --merch-accent-hover: #2563eb;
+  --merch-accent-muted: #93c5fd;
+
+  // Backgrounds
+  --merch-bg: #ffffff;
+  --merch-bg-subtle: #f8fafc;
+  --merch-bg-muted: #f1f5f9;
+
+  // Surface
+  --merch-surface: #ffffff;
+  --merch-surface-raised: #ffffff;
+  --merch-border: #e2e8f0;
+  --merch-border-strong: #cbd5e1;
+
+  // Text
+  --merch-text: #0f172a;
+  --merch-text-secondary: #64748b;
+  --merch-text-muted: #94a3b8;
+  --merch-text-inverse: #ffffff;
+
+  // Status
+  --merch-success: #10b981;
+  --merch-warning: #f59e0b;
+  --merch-error: #ef4444;
+  --merch-info: #3b82f6;
+
+  // Input states
+  --merch-input-bg: #ffffff;
+  --merch-input-border: #e2e8f0;
+  --merch-input-computed: #94a3b8;
+
+  // Typography
+  --merch-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --merch-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --merch-radius-sm: 6px;
+  --merch-radius-md: 8px;
+  --merch-radius-lg: 12px;
+  --merch-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --merch-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --merch-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
