@@ -48,8 +48,56 @@ export class CalculatorComponent implements OnInit {
     val !== '' && val != null && !isNaN(+val) ? this.round2(+val) : null;
 
   focusedField = signal<string | null>(null);
+  /** Track if user has typed since focusing; only then do we skip decimal padding */
+  hasTypedSinceFocus = signal<Record<string, boolean>>({});
 
-  /** Format number for input display. When focused (padDecimals=false), no decimal padding; when blurred, add commas + pad decimals */
+  /** Only skip decimal padding when focused AND user has typed this session */
+  shouldPadDecimals = (field: string): boolean =>
+    this.focusedField() !== field || !this.hasTypedSinceFocus()[field];
+
+  onFieldFocus = (field: string): void => {
+    this.focusedField.set(field);
+    this.hasTypedSinceFocus.update((m) => ({ ...m, [field]: false }));
+  };
+
+  onFieldBlur = (field: string): void => {
+    this.focusedField.set(null);
+    this.formatInputOnBlur(field);
+  };
+
+  onCostInput = (val: string): void => {
+    this.hasTypedSinceFocus.update((m) => ({ ...m, cost: true }));
+    this.cost.set(this.parseInputValue(val));
+    this.pricingFieldLastEdited.set('cost');
+  };
+  onMarkupInput = (val: string): void => {
+    this.hasTypedSinceFocus.update((m) => ({ ...m, markupPercent: true }));
+    this.markupPercent.set(this.parseInputValue(val));
+    this.pricingFieldLastEdited.set('markup');
+  };
+  onSalePriceInput = (val: string): void => {
+    this.hasTypedSinceFocus.update((m) => ({ ...m, salePricePerUnit: true }));
+    this.salePricePerUnit.set(this.parseInputValue(val));
+    this.pricingFieldLastEdited.set('salePrice');
+  };
+  onGenericNumericInput = (field: string, val: string, setter: (n: number | null) => void): void => {
+    this.hasTypedSinceFocus.update((m) => ({ ...m, [field]: true }));
+    setter(this.parseInputValue(val));
+  };
+
+  onReturnsPercentInput = (val: string): void => this.onGenericNumericInput('returnsPercent', val, (n) => this.returnsPercent.set(n));
+  onShippingCostInput = (val: string): void => this.onGenericNumericInput('shippingCost', val, (n) => this.shippingCost.set(n));
+  onTaxesAmountInput = (val: string): void => this.onGenericNumericInput('taxesAmount', val, (n) => this.taxesAmount.set(n));
+  onDiscountsAmountInput = (val: string): void => this.onGenericNumericInput('discountsAmount', val, (n) => this.discountsAmount.set(n));
+  onOtherCostsInput = (val: string): void => this.onGenericNumericInput('otherCosts', val, (n) => this.otherCosts.set(n));
+  onRoyaltyPercentInput = (val: string): void => this.onGenericNumericInput('royaltyPercent', val, (n) => this.royaltyPercent.set(n));
+  onRoyaltyPerUnitInput = (val: string): void => this.onGenericNumericInput('royaltyPerUnit', val, (n) => this.royaltyPerUnit.set(n));
+  onUnitsInput = (val: string): void => {
+    this.hasTypedSinceFocus.update((m) => ({ ...m, units: true }));
+    this.setUnitsFromInput(val);
+  };
+
+  /** Format number for input display. Skip decimal padding only when focused AND user has typed this session */
   formatInputDisplay = (val: number | null, decimals = 2, padDecimals = true): string => {
     if (val === null || val === undefined || isNaN(val)) return '';
     const n = this.round2(val);
@@ -182,12 +230,15 @@ export class CalculatorComponent implements OnInit {
 
   private inputsEffect = effect(
     () => {
+    const c = this.cost();
+    const m = this.markupPercent();
+    const s = this.salePricePerUnit();
     const input: CalculatorInput = {
       mode: this.showRoyalties() ? 'artist-label' : 'merch-only',
       pricingFieldLastEdited: this.pricingFieldLastEdited() ?? undefined,
-      cost: this.cost() ?? undefined,
-      markupPercent: this.markupPercent() ?? undefined,
-      salePricePerUnit: this.salePricePerUnit() ?? undefined,
+      ...(c != null && !isNaN(c) && { cost: c }),
+      ...(m != null && !isNaN(m) && { markupPercent: m }),
+      ...(s != null && !isNaN(s) && { salePricePerUnit: s }),
       units: this.units() ?? 100,
       returnsPercent: this.returnsPercent() ?? undefined,
       shippingCost: this.shippingCost() ?? undefined,
@@ -201,7 +252,7 @@ export class CalculatorComponent implements OnInit {
     };
     const res = calculate(input);
     this.result.set(res);
-    // Auto-fill computed values into inputs so they display
+    // Always auto-fill computed values into inputs
     if (res.computed.revenue) this.salePricePerUnit.set(this.round2(res.revenue / res.units));
     if (res.computed.markupPercent) this.markupPercent.set(this.round2(res.markupPercent));
     if (res.computed.cost) this.cost.set(this.round2(res.cost));

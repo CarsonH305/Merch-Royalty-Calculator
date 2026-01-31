@@ -44,7 +44,7 @@
                     <mat-icon matTooltip="{{ getFieldTooltip('cost') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
                   </label>
                   <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
-                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(cost(), 2, focusedField() !== 'cost')" (ngModelChange)="cost.set(parseInputValue($event)); pricingFieldLastEdited.set('cost')" (focus)="focusedField.set('cost')" (blur)="focusedField.set(null); formatInputOnBlur('cost')" placeholder="0.00" />
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(cost(), 2, shouldPadDecimals('cost'))" (ngModelChange)="onCostInput($event)" (focus)="onFieldFocus('cost')" (blur)="onFieldBlur('cost')" placeholder="0.00" />
                     <span matTextPrefix class="prefix">$</span>
                   </mat-form-field>
                 </div>
@@ -55,7 +55,7 @@
                     <mat-icon matTooltip="{{ getFieldTooltip('markupPercent') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
                   </label>
                   <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
-                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(markupPercent(), 2, focusedField() !== 'markupPercent')" (ngModelChange)="markupPercent.set(parseInputValue($event)); pricingFieldLastEdited.set('markup')" (focus)="focusedField.set('markupPercent')" (blur)="focusedField.set(null); formatInputOnBlur('markupPercent')" placeholder="0.00" />
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(markupPercent(), 2, shouldPadDecimals('markupPercent'))" (ngModelChange)="onMarkupInput($event)" (focus)="onFieldFocus('markupPercent')" (blur)="onFieldBlur('markupPercent')" placeholder="0.00" />
                     <span matTextSuffix>%</span>
                   </mat-form-field>
                 </div>
@@ -66,7 +66,7 @@
                     <mat-icon matTooltip="{{ getFieldTooltip('salePricePerUnit') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
                   </label>
                   <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
-                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(salePricePerUnit(), 2, focusedField() !== 'salePricePerUnit')" (ngModelChange)="salePricePerUnit.set(parseInputValue($event)); pricingFieldLastEdited.set('salePrice')" (focus)="focusedField.set('salePricePerUnit')" (blur)="focusedField.set(null); formatInputOnBlur('salePricePerUnit')" placeholder="0.00" />
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(salePricePerUnit(), 2, shouldPadDecimals('salePricePerUnit'))" (ngModelChange)="onSalePriceInput($event)" (focus)="onFieldFocus('salePricePerUnit')" (blur)="onFieldBlur('salePricePerUnit')" placeholder="0.00" />
                     <span matTextPrefix class="prefix">$</span>
                   </mat-form-field>
                 </div>
@@ -77,7 +77,7 @@
                     <mat-icon matTooltip="{{ getFieldTooltip('units') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
                   </label>
                   <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
-                    <input matInput type="text" inputmode="numeric" [ngModel]="formatInputDisplay(units(), 0, focusedField() !== 'units')" (ngModelChange)="setUnitsFromInput($event)" (focus)="focusedField.set('units')" (blur)="focusedField.set(null); formatInputOnBlur('units')" placeholder="100" />
+                    <input matInput type="text" inputmode="numeric" [ngModel]="formatInputDisplay(units(), 0, shouldPadDecimals('units'))" (ngModelChange)="onUnitsInput($event)" (focus)="onFieldFocus('units')" (blur)="onFieldBlur('units')" placeholder="100" />
                   </mat-form-field>
                 </div>
               </div>
@@ -99,7 +99,7 @@
                     <mat-icon matTooltip="{{ getFieldTooltip('returnsPercent') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
                   </label>
                   <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
-                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(returnsPercent(), 2, focusedField() !== 'returnsPercent')" (ngModelChange)="returnsPercent.set(parseInputValue($event))" (focus)="focusedField.set('returnsPercent')" (blur)="focusedField.set(null); formatInputOnBlur('returnsPercent')" placeholder="0.00" />
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(returnsPercent(), 2, shouldPadDecimals('returnsPercent'))" (ngModelChange)="onReturnsPercentInput($event)" (focus)="onFieldFocus('returnsPercent')" (blur)="onFieldBlur('returnsPercent')" placeholder="0.00" />
                     <span matTextSuffix>%</span>
                   </mat-form-field>
                 </div>
@@ -110,7 +110,7 @@
                     <mat-icon matTooltip="{{ getFieldTooltip('shippingCost') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
                   </label>
                   <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
-                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(shippingCost(), 2, focusedField() !== 'shippingCost')" (ngModelChange)="shippingCost.set(parseInputValue($event))" (focus)="focusedField.set('shippingCost')" (blur)="focusedField.set(null); formatInputOnBlur('shippingCost')" placeholder="0.00" />
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(shippingCost(), 2, shouldPadDecimals('shippingCost'))" (ngModelChange)="onShippingCostInput($event)" (focus)="onFieldFocus('shippingCost')" (blur)="onFieldBlur('shippingCost')" placeholder="0.00" />
                     <span matTextPrefix class="prefix">$</span>
                   </mat-form-field>
                 </div>
@@ -121,7 +121,7 @@
                     <mat-icon matTooltip="{{ getFieldTooltip('taxesAmount') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
                   </label>
                   <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
-                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(taxesAmount(), 2, focusedField() !== 'taxesAmount')" (ngModelChange)="taxesAmount.set(parseInputValue($event))" (focus)="focusedField.set('taxesAmount')" (blur)="focusedField.set(null); formatInputOnBlur('taxesAmount')" placeholder="0.00" />
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(taxesAmount(), 2, shouldPadDecimals('taxesAmount'))" (ngModelChange)="onTaxesAmountInput($event)" (focus)="onFieldFocus('taxesAmount')" (blur)="onFieldBlur('taxesAmount')" placeholder="0.00" />
                     <span matTextPrefix class="prefix">$</span>
                   </mat-form-field>
                 </div>
@@ -132,7 +132,7 @@
                     <mat-icon matTooltip="{{ getFieldTooltip('discountsAmount') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
                   </label>
                   <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
-                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(discountsAmount(), 2, focusedField() !== 'discountsAmount')" (ngModelChange)="discountsAmount.set(parseInputValue($event))" (focus)="focusedField.set('discountsAmount')" (blur)="focusedField.set(null); formatInputOnBlur('discountsAmount')" placeholder="0.00" />
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(discountsAmount(), 2, shouldPadDecimals('discountsAmount'))" (ngModelChange)="onDiscountsAmountInput($event)" (focus)="onFieldFocus('discountsAmount')" (blur)="onFieldBlur('discountsAmount')" placeholder="0.00" />
                     <span matTextPrefix class="prefix">$</span>
                   </mat-form-field>
                 </div>
@@ -143,7 +143,7 @@
                     <mat-icon matTooltip="{{ getFieldTooltip('otherCosts') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
                   </label>
                   <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
-                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(otherCosts(), 2, focusedField() !== 'otherCosts')" (ngModelChange)="otherCosts.set(parseInputValue($event))" (focus)="focusedField.set('otherCosts')" (blur)="focusedField.set(null); formatInputOnBlur('otherCosts')" placeholder="0.00" />
+                    <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(otherCosts(), 2, shouldPadDecimals('otherCosts'))" (ngModelChange)="onOtherCostsInput($event)" (focus)="onFieldFocus('otherCosts')" (blur)="onFieldBlur('otherCosts')" placeholder="0.00" />
                     <span matTextPrefix class="prefix">$</span>
                   </mat-form-field>
                 </div>
@@ -181,7 +181,7 @@
                         <mat-icon matTooltip="{{ getFieldTooltip('royaltyPercent') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
                       </label>
                       <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
-                        <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(royaltyPercent(), 2, focusedField() !== 'royaltyPercent')" (ngModelChange)="royaltyPercent.set(parseInputValue($event))" (focus)="focusedField.set('royaltyPercent')" (blur)="focusedField.set(null); formatInputOnBlur('royaltyPercent')" placeholder="0.00" />
+                        <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(royaltyPercent(), 2, shouldPadDecimals('royaltyPercent'))" (ngModelChange)="onRoyaltyPercentInput($event)" (focus)="onFieldFocus('royaltyPercent')" (blur)="onFieldBlur('royaltyPercent')" placeholder="0.00" />
                         <span matTextSuffix>%</span>
                       </mat-form-field>
                     </div>
@@ -207,7 +207,7 @@
                         <mat-icon matTooltip="{{ getFieldTooltip('royaltyPerUnit') }}" matTooltipPosition="above" class="info-icon-inline">info</mat-icon>
                       </label>
                       <mat-form-field appearance="outline" class="field-input" subscriptSizing="dynamic">
-                        <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(royaltyPerUnit(), 2, focusedField() !== 'royaltyPerUnit')" (ngModelChange)="royaltyPerUnit.set(parseInputValue($event))" (focus)="focusedField.set('royaltyPerUnit')" (blur)="focusedField.set(null); formatInputOnBlur('royaltyPerUnit')" placeholder="0.00" />
+                        <input matInput type="text" inputmode="decimal" [ngModel]="formatInputDisplay(royaltyPerUnit(), 2, shouldPadDecimals('royaltyPerUnit'))" (ngModelChange)="onRoyaltyPerUnitInput($event)" (focus)="onFieldFocus('royaltyPerUnit')" (blur)="onFieldBlur('royaltyPerUnit')" placeholder="0.00" />
                         <span matTextPrefix class="prefix">$</span>
                       </mat-form-field>
                     </div>
